@@ -1,4 +1,5 @@
 require('dotenv').config()
+const port = process.env.PORT || 3000;
 
 const cors = require('cors');
 
@@ -28,7 +29,6 @@ app.post('/api/fileanalyse', upload, function(req, res) {
   res.json(fileStats);
 });
 
-const port = process.env.PORT || 3000;
 app.listen(port, function () {
-  console.log('Your app is listening on port ' + port)
+  console.log('Listening at: http://localhost:' + port)
 });
