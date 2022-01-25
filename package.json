@@ -12,6 +12,9 @@
     "cors": "^2.8.5",
     "multer": "^1.4.4"
   },
+	"engines": {
+    "node": "^16.13.0"
+	},
   "repository": {
     "url": "git+https://github.com/zc2021/filemetadata"
   },

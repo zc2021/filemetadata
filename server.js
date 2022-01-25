@@ -1,34 +1,31 @@
-require('dotenv').config()
-const port = process.env.PORT || 3000;
+require('dotenv').config();
+const development = process.env.NODE_ENV === 'development';
+const cluster = require('cluster');
 
-const cors = require('cors');
+if (cluster.isMaster) {
+  const workerPool = process.env.WEB_CONCURRENCY || 1;
+  for (let i=0; i < workerPool; i++) {
+    cluster.fork();
+  }
+  cluster.on('exit', function(worker) {
+    console.log(`Worker ${worker.id} died.`);
+    cluster.fork();
+  });
+} else {
+  const cors = require('cors');
+  const express = require('express');
 
-const express = require('express');
-const app = express();
+  const app = express();
+  const port = process.env.PORT || 3000;
+  const appRouter = require(`${__dirname}/routes/endpoints`);
 
-const multer = require('multer');
-const storage = multer.memoryStorage();
-const fileLimits = { fileSize: 1000000 };
-const upload = multer({ 
-  storage: storage, 
-  limits: fileLimits }).single('upfile')
+  app.use(cors());
+  app.use('/public', express.static(process.cwd() + '/public'));
+  app.use(appRouter)
 
-app.use(cors());
-app.use('/public', express.static(process.cwd() + '/public'));
-
-app.get('/', function (_req, res) {
-  res.sendFile(process.cwd() + '/views/index.html');
-});
-
-app.post('/api/fileanalyse', upload, function(req, res) {
-  const fileStats = {
-    'name': req.file.originalname,
-    'type': req.file.mimetype,
-    'size': req.file.size
-  };
-  res.json(fileStats);
-});
-
-app.listen(port, function () {
-  console.log('Listening at: http://localhost:' + port)
-});
+  app.listen(port, function () {
+    if (development) {
+      console.log(`Worker ${cluster.worker.id} listening at: http://localhost:${port}`);
+    }
+  });
+}
