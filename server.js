@@ -20,7 +20,7 @@ if (cluster.isMaster) {
   const port = process.env.PORT || 3000;
   const appRouter = require(`${__dirname}/routes/endpoints`);
 
-  app.use(helmet);
+  app.use(helmet());
   app.use(cors());
   app.use('/public', express.static(process.cwd() + '/public'));
   app.use(appRouter)
