@@ -25,6 +25,10 @@ if (cluster.isMaster) {
   app.use('/public', express.static(process.cwd() + '/public'));
   app.use(appRouter)
 
+  app.get('/', function (_req, res) {
+    res.sendFile(__dirname + '/views/index.html');
+  });
+
   app.listen(port, function () {
     if (development) {
       console.log(`Worker ${cluster.worker.id} listening at: http://localhost:${port}`);

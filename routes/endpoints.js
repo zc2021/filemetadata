@@ -1,4 +1,3 @@
-const path = require('path');
 const express = require('express');
 
 const multer = require('multer');
@@ -18,11 +17,7 @@ const upload = multer({
 
 const recordRoutes = express.Router();
 
-recordRoutes.route('/').get(function (_req, res) {
-  res.sendFile(path.dirname(__dirname) + '/views/index.html');
-});
-
-recordRoutes.route('/api/fileanalyse').post(upload, function(req, res) {
+recordRoutes.route('/api/fileanalyse').post(upload, function (req, res) {
   try {
     const fileStats = {
       'name': req.file.originalname,
@@ -35,4 +30,18 @@ recordRoutes.route('/api/fileanalyse').post(upload, function(req, res) {
    }
 });
 
+recordRoutes.route('/api').get(function (req, res) {
+  const endpoints = [];
+  const host = isEmpty(req.baseUrl) ? req.hostname : req.baseUrl;
+  const body = {
+    'host': host,
+  };
+  res.json(body);
+});
+
 module.exports = recordRoutes;
+
+// helpers
+function isEmpty(str) {
+  return str.length === 0;
+}
