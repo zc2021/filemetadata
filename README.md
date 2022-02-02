@@ -18,7 +18,13 @@ Middleware | Function
 
 Worker maximum (`WEB_CONCURRENCY`) and listening port (`PORT`) are configurable through environment variables. `dotenv` is required in development for `.env` support. `development` is defined in the application as any non-production environment.
 
-`endpoints` 
+Note that HTTP `GET` requests to the root path (`'/'`) are served directly, rather than through the API router.
+
+`endpoints.js` exports the application router, an instance of `express.Router()`, as `recordRoutes`. API endpoints include:
+
+Path | Request | Response
+-|-|-
+`/api/fileanalyse` | `POST` | `{}`
 
 ## Stack
 Layer | Technology

@@ -13,7 +13,7 @@ const upload = multer({
     } else {
       next(null, true);
     }
-  } }).single('upfile')
+  } }).single('upfile');
 
 const recordRoutes = express.Router();
 
@@ -24,9 +24,9 @@ recordRoutes.route('/api/fileanalyse').post(upload, function (req, res) {
       'type': req.file.mimetype,
       'size': req.file.size
     };
-    res.json(fileStats);
+    res.status(200).json(fileStats);
    } catch {
-     res.json({ error: 'upload failed' })
+    res.status(400).json({ error: 'upload failed' })
    }
 });
 
@@ -36,7 +36,7 @@ recordRoutes.route('/api').get(function (req, res) {
   const body = {
     'host': host,
   };
-  res.json(body);
+  res.status(200).json(body);
 });
 
 module.exports = recordRoutes;
